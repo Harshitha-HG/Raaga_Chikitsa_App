@@ -1,0 +1,332 @@
+import 'package:flutter/material.dart';
+import 'vanaspati.dart'; // Add correct import path
+import 'ganamurti.dart'; // Add correct import path
+
+const brown = Color.fromRGBO(92, 2, 2, 1);
+const lightBrown = Color.fromRGBO(105, 23, 5, 1);
+const darkBorderColor = Color(0xFFD48D66);
+const veryLightBrownContainerColor = Color(0xFFF5E0C3);
+
+class RaagaRemediesScreen extends StatefulWidget {
+  const RaagaRemediesScreen({super.key});
+
+  @override
+  State<RaagaRemediesScreen> createState() => _RaagaRemediesScreenState();
+}
+
+class _RaagaRemediesScreenState extends State<RaagaRemediesScreen> {
+  String? _selectedProblem;
+  List<String> _currentRaagas = [];
+  bool _showRaagaContainer = false;
+
+  final List<String> _problems = [
+    'Sleep & Relaxation Disorders',
+    'Stress & Anxiety',
+    'Hypertension & High Blood Pressure',
+    'Respiratory Issues (Asthma, Breathing Difficulties)',
+    'Fatigue & Lack of Energy',
+    'Digestive Disorders',
+    'Meditation & Mental Clarity',
+    'Heart & Emotional Healing',
+    'Anger & Irritability',
+    'Headache & Migraine',
+    'Depression & Mood Swings',
+  ];
+
+  final Map<String, List<String>> _raagaRemedies = {
+    'Sleep & Relaxation Disorders': ['Ganamurti', 'Naganandini', 'Natabhairavi', 'Pavani'],
+    'Stress & Anxiety': ['Tanaroopi', 'Senavati', 'Mayamalavagowla', 'Vachaspathi'],
+    'Hypertension & High Blood Pressure': ['Keeravani', 'Chalanata', 'Ragavardhini', 'Hemavati'],
+    'Respiratory Issues (Asthma, Breathing Difficulties)': ['Ratnangi', 'Charukesi', 'Jhalavarali', 'Dhavalambari'],
+    'Fatigue & Lack of Energy': ['Manavati', 'Chayavati', 'Vagadhishvari', 'Bhavapriya'],
+    'Digestive Disorders': ['Natakapriya', 'Chakravakam', 'Mararanjani', 'Raganarayani'],
+    'Meditation & Mental Clarity': ['Rupavati', 'Vanaspati', 'Dhunibinnashadjam', 'Rasikapriya'],
+    'Heart & Emotional Healing': ['Gayakapriya', 'Kharaharapriya', 'Namanarayani', 'Latangi'],
+    'Anger & Irritability': ['Hanumatodi', 'Vakulabharanam', 'Yagapriya', 'Shamalangi'],
+    'Headache & Migraine': ['Kokilapriya', 'Varunapriya', 'Shadvidamargini', 'Simhendramadhyamam'],
+    'Depression & Mood Swings': ['Kanakangi', 'Jhankaradhvani', 'Dheerasankarabharanam', 'Gavambodhi'],
+  };
+
+  void _getRaagasForProblem() {
+    if (_selectedProblem == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please select a symptom or feeling.'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+      setState(() {
+        _showRaagaContainer = false;
+        _currentRaagas.clear();
+      });
+      return;
+    }
+
+    setState(() {
+      _currentRaagas = _raagaRemedies[_selectedProblem] ?? [];
+      _showRaagaContainer = _currentRaagas.isNotEmpty;
+      if (_currentRaagas.isEmpty && _selectedProblem != null) {
+        _currentRaagas = ['No specific raagas found.'];
+        _showRaagaContainer = true;
+      }
+    });
+  }
+
+  void _handleRaagaClick(String raaga) {
+    if (raaga == 'Vanaspati') {
+      Navigator.push(context, MaterialPageRoute(builder: (context) => VanaspatiScreen()));
+    } else if (raaga == 'Ganamurti') {
+      Navigator.push(context, MaterialPageRoute(builder: (context) => GanamurthiScreen()));
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Screen not available for "$raaga"')),
+      );
+    }
+  }
+
+  Widget _buildRaagaItem(String name) {
+    return GestureDetector(
+      onTap: () => _handleRaagaClick(name),
+      child: Container(
+        width: 340,
+        height: 48,
+        margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(14),
+          color: darkBorderColor.withOpacity(0.4),
+        ),
+        padding: const EdgeInsets.symmetric(horizontal: 18),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              child: Text(
+                name,
+                style: const TextStyle(
+                  color: brown,
+                  fontFamily: 'Inter',
+                  fontSize: 20,
+                ),
+              ),
+            ),
+            const Text(
+              '>',
+              style: TextStyle(
+                color: brown,
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+
+    return Scaffold(
+      body: Container(
+        width: screenWidth,
+        height: screenHeight,
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topRight,
+            end: Alignment.bottomLeft,
+            colors: [Color(0xFFFFf1db), Color(0xFFFFbc97)],
+          ),
+        ),
+        child: Stack(
+          children: [
+            Positioned(
+              top: 0,
+              left: 0,
+              right: 0,
+              child: Container(
+                height: screenHeight * 0.08,
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                decoration: const BoxDecoration(
+                  color: Color.fromRGBO(212, 141, 102, 0.95),
+                  borderRadius: BorderRadius.only(topLeft: Radius.circular(15), topRight: Radius.circular(15)),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    GestureDetector(
+                      onTap: () => Navigator.pop(context),
+                      child: Image.asset(
+                        'assets/arrow_left.png',
+                        width: screenWidth * 0.07,
+                        height: screenHeight * 0.04,
+                        fit: BoxFit.contain,
+                      ),
+                    ),
+                    Text(
+                      'Raaga for Relief',
+                      style: TextStyle(
+                        color: brown,
+                        fontFamily: 'Inter',
+                        fontSize: screenWidth * 0.055,
+                      ),
+                    ),
+                    ClipOval(
+                      child: Image.asset(
+                        'assets/ragachikitsalogo.png',
+                        width: screenWidth * 0.1,
+                        height: screenHeight * 0.05,
+                        fit: BoxFit.contain,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Positioned(
+              top: screenHeight * 0.10,
+              left: screenWidth * 0.24,
+              child: Text(
+                'Raaga Remedies',
+                style: TextStyle(
+                  color: brown,
+                  fontFamily: 'Inter',
+                  fontSize: screenWidth * 0.068,
+                ),
+              ),
+            ),
+            Positioned(
+              top: screenHeight * 0.18,
+              left: screenWidth * 0.07,
+              child: Container(
+                width: (screenWidth * 0.86).round().toDouble(),
+                height: screenHeight * 0.065,
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(17),
+                  color: const Color(0xFFFFF1DB),
+                  border: Border.all(color: const Color(0xFF6A1805), width: 2),
+                ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: DropdownButtonFormField<String>(
+                        decoration: const InputDecoration(
+                          border: InputBorder.none,
+                          hintText: 'Select your symptom or feeling',
+                          hintStyle: TextStyle(
+                            color: Color(0xCACA1805),
+                            fontFamily: 'Inter',
+                            fontSize: 12,
+                          ),
+                        ),
+                        value: _selectedProblem,
+                        items: _problems.map((problem) {
+                          return DropdownMenuItem<String>(
+                            value: problem,
+                            child: Text(problem, style: const TextStyle(fontSize: 12)),
+                          );
+                        }).toList(),
+                        onChanged: (String? newValue) {
+                          setState(() {
+                            _selectedProblem = newValue;
+                          });
+                        },
+                        icon: SizedBox(
+                          width: 18,
+                          height: 18,
+                          child: Image.asset('assets/Image9.png'),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Positioned(
+              top: screenHeight * 0.28,
+              left: screenWidth * 0.34,
+              child: ElevatedButton(
+                onPressed: _getRaagasForProblem,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color.fromRGBO(212, 141, 102, 0.59),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(24),
+                      side: const BorderSide(color: Color(0xFF6A1805), width: 3)),
+                  elevation: 4,
+                ),
+                child: Text(
+                  'Get Raagas',
+                  style: TextStyle(
+                    color: brown,
+                    fontFamily: 'Inter',
+                    fontSize: screenWidth * 0.045,
+                  ),
+                ),
+              ),
+            ),
+            if (_showRaagaContainer)
+              Positioned(
+                top: screenHeight * 0.38,
+                left: screenWidth * 0.05,
+                right: screenWidth * 0.05,
+                bottom: screenHeight * 0.12,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(15),
+                    color: brown.withOpacity(0.01),
+                    border: Border.all(color: darkBorderColor, width: 2),
+                  ),
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: Row(
+                          children: [
+                            const Icon(Icons.music_note, color: brown, size: 29),
+                            const SizedBox(width: 10),
+                            Text(
+                              'Healing Raagas',
+                              style: TextStyle(
+                                color: brown,
+                                fontFamily: 'Inter',
+                                fontSize: screenWidth * 0.065,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Expanded(
+                        child: SingleChildScrollView(
+                          child: Column(
+                            children: _currentRaagas.map((raaga) => _buildRaagaItem(raaga)).toList(),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            Positioned(
+              bottom: screenHeight * 0.05,
+              left: 0,
+              right: 0,
+              child: Text(
+                'Music speaks what the heart feels — let it heal you.',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: lightBrown,
+                  fontFamily: 'Inter',
+                  fontSize: screenWidth * 0.03,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
